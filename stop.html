@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gradient Circle + Stopwatch</title>
+  <style>
+    :root{
+      --bg: #0f1724;
+      --card: #0b1220;
+      --accent1: #ff7a18;
+      --accent2: #6a11cb;
+      --accent3: #00d2ff;
+      --glass: rgba(255,255,255,0.04);
+      --glass-2: rgba(255,255,255,0.02);
+      --muted: #9aa4b2;
+    }
+
+    *{box-sizing:border-box;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;}
+
+    body{
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:
+        radial-gradient(1200px 700px at 10% 10%, rgba(106,17,203,0.08), transparent 8%),
+        radial-gradient(900px 500px at 90% 80%, rgba(0,210,255,0.04), transparent 10%),
+        var(--bg);
+      color:#e6eef6;
+      padding:24px;
+    }
+
+    .wrap{
+      width:920px;
+      max-width:100%;
+      display:grid;
+      grid-template-columns: 360px 1fr;
+      gap:28px;
+      align-items:start;
+    }
+
+    /* Left: decorative shapes */
+    .shapes {
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:16px;
+      padding:18px;
+      box-shadow: 0 6px 30px rgba(2,6,23,0.6);
+    }
+    .shapes h3{
+      margin:0 0 12px 0;
+      font-size:16px;
+      color:var(--muted);
+    }
+    .shape-row{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      justify-content:center;
+      padding:12px 4px;
+    }
+
+    /* Full circle with smooth conic gradient */
+    .circle {
+      width:160px;
+      height:160px;
+      border-radius:50%;
+      background: conic-gradient(from 200deg, var(--accent1), var(--accent2), var(--accent3), var(--accent1));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.5), inset 0 2px 18px rgba(255,255,255,0.06);
+      position:relative;
+      overflow:hidden;
+    }
+    .circle::after{
+      content:"";
+      position:absolute;
+      inset:8px;
+      border-radius:50%;
+      background:linear-gradient(180deg, rgba(0,0,0,0.12), rgba(255,255,255,0.02));
+      mix-blend-mode:overlay;
+    }
+    .circle .dot{
+      width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.85);
+      transform:translateY(8px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+    }
+
+    /* Half circle: top half gradient */
+    .half-wrap{
+      width:160px;
+      height:80px;
+      overflow:hidden;
+    }
+    .half{
+      width:160px;
+      height:160px;
+      border-radius:50%;
+      background: linear-gradient(90deg, #ff7a18, #ffb199);
+      transform:translateY(-80px); /* show top half only */
+      box-shadow: 0 6px 20px rgba(0,0,0,0.45);
+      position:relative;
+    }
+    .half::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:50%;
+      background:linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.06));
+      mix-blend-mode:overlay;
+    }
+
+    /* Right: Stopwatch card */
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.015));
+      border-radius:16px;
+      padding:22px;
+      box-shadow: 0 8px 40px rgba(3,7,22,0.6);
+    }
+    .card h1{
+      margin:0 0 6px 0;
+      font-size:20px;
+    }
+    .card p{margin:0 0 16px 0;color:var(--muted);font-size:13px}
+
+    .display{
+      display:flex;
+      align-items:center;
+      gap:18px;
+      margin-bottom:18px;
+    }
+    .time{
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.04));
+      border-radius:12px;
+      padding:14px 18px;
+      min-width:220px;
+      text-align:center;
+      font-weight:600;
+      font-size:28px;
+      letter-spacing:1px;
+      box-shadow: 0 6px 18px rgba(2,6,23,0.5);
+    }
+    .controls{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      margin-left:auto;
+    }
+    button.btn{
+      padding:10px 14px;
+      border-radius:10px;
+      border: none;
+      cursor:pointer;
+      font-weight:600;
+      background:var(--glass);
+      color:inherit;
+      min-width:84px;
+      box-shadow: 0 6px 18px rgba(2,6,23,0.35);
+    }
+    button.primary{
+      background: linear-gradient(90deg,var(--accent1),var(--accent2));
+      color:white;
+    }
+    button.ghost{
+      background:transparent;
+      border:1px solid rgba(255,255,255,0.06);
+    }
+
+    .laps{
+      margin-top:10px;
+      max-height:260px;
+      overflow:auto;
+      padding-top:6px;
+      border-top:1px dashed rgba(255,255,255,0.03);
+    }
+    .lap{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      padding:8px 10px;
+      border-radius:8px;
+      align-items:center;
+      margin-bottom:8px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.01), rgba(255,255,255,0.0));
+      font-size:14px;
+    }
+    .muted{color:var(--muted);font-size:13px}
+    .small{font-size:12px;color:var(--muted)}
+
+    /* responsive */
+    @media (max-width:880px){
+      .wrap{grid-template-columns:1fr;align-items:stretch}
+      .shapes{order:2}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="shapes" aria-hidden="true">
+      <h3>Simple Gradient Shapes</h3>
+      <div class="shape-row" style="justify-content:space-between;">
+        <div class="circle" title="Gradient circle">
+          <div class="dot" aria-hidden="true"></div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:12px;align-items:center;">
+          <div class="half-wrap">
+            <div class="half" title="Half circle (top)"></div>
+          </div>
+          <div class="small">Half circle (top)</div>
+        </div>
+      </div>
+
+      <div style="margin-top:18px;color:var(--muted);font-size:13px;">
+        You can adapt the gradients (conic/linear) and sizes. The half-circle is just a full circle shifted to reveal only its top half.
+      </div>
+    </div>
+
+    <section class="card" aria-label="Stopwatch">
+      <h1>Stopwatch</h1>
+      <p>Start, pause, reset and record lap times. Accurate timing uses high-resolution timestamps.</p>
+
+      <div class="display">
+        <div class="time" id="display">00:00.00</div>
+        <div class="controls" role="group" aria-label="stopwatch controls">
+          <button id="startPause" class="btn primary">Start</button>
+          <button id="lapBtn" class="btn ghost" disabled>Lap</button>
+          <button id="resetBtn" class="btn" disabled>Reset</button>
+        </div>
+      </div>
+
+      <div class="laps" id="laps" aria-live="polite" aria-atomic="false">
+        <!-- laps will appear here -->
+      </div>
+
+    </section>
+  </div>
+
+  <script>
+    // Stopwatch implementation using performance.now() and requestAnimationFrame for smooth updates
+    (function(){
+      const display = document.getElementById('display');
+      const startPauseBtn = document.getElementById('startPause');
+      const lapBtn = document.getElementById('lapBtn');
+      const resetBtn = document.getElementById('resetBtn');
+      const lapsContainer = document.getElementById('laps');
+
+      // state
+      let running = false;
+      let startTs = 0;       // performance.now() when started
+      let pausedTime = 0;    // accumulated milliseconds while paused
+      let rafId = null;
+      let lastRender = 0;
+      let laps = [];
+
+      function formatTime(ms){
+        // mm:ss.CS (CS = centiseconds)
+        const totalCs = Math.floor(ms / 10); // centiseconds
+        const cs = totalCs % 100;
+        const totalSec = Math.floor(totalCs / 100);
+        const s = totalSec % 60;
+        const m = Math.floor(totalSec / 60);
+        return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}.${String(cs).padStart(2,'0')}`;
+      }
+
+      function elapsed(){
+        if (!running && startTs === 0) return 0;
+        if (running) {
+          return pausedTime + (performance.now() - startTs);
+        } else {
+          return pausedTime;
+        }
+      }
+
+      function render(){
+        const ms = elapsed();
+        display.textContent = formatTime(ms);
+      }
+
+      function tick(){
+        render();
+        rafId = requestAnimationFrame(tick);
+      }
+
+      startPauseBtn.addEventListener('click', () => {
+        if (!running) {
+          // start / resume
+          startTs = performance.now();
+          running = true;
+          startPauseBtn.textContent = 'Pause';
+          startPauseBtn.classList.add('primary');
+          lapBtn.disabled = false;
+          resetBtn.disabled = false;
+          rafId = requestAnimationFrame(tick);
+        } else {
+          // pause
+          running = false;
+          pausedTime += performance.now() - startTs;
+          startTs = 0;
+          startPauseBtn.textContent = 'Start';
+          cancelAnimationFrame(rafId);
+          rafId = null;
+          // ensure display updates at pause moment
+          render();
+        }
+      });
+
+      resetBtn.addEventListener('click', () => {
+        // reset everything
+        running = false;
+        startTs = 0;
+        pausedTime = 0;
+        laps = [];
+        display.textContent = '00:00.00';
+        lapsContainer.innerHTML = '';
+        startPauseBtn.textContent = 'Start';
+        if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+        lapBtn.disabled = true;
+        resetBtn.disabled = true;
+      });
+
+      lapBtn.addEventListener('click', () => {
+        const ms = elapsed();
+        const lapObj = { id: Date.now() + Math.random(), time: ms };
+        laps.unshift(lapObj); // newest first
+        renderLaps();
+      });
+
+      function renderLaps(){
+        lapsContainer.innerHTML = '';
+        if (laps.length === 0){
+          const el = document.createElement('div');
+          el.className = 'small';
+          el.textContent = 'No laps recorded';
+          lapsContainer.appendChild(el);
+          return;
+        }
+        laps.forEach((lap, idx) => {
+          const row = document.createElement('div');
+          row.className = 'lap';
+          const left = document.createElement('div');
+          left.innerHTML = `<div style="font-weight:700">Lap ${laps.length - idx}</div><div class="muted small">${new Date(lap.id).toLocaleTimeString()}</div>`;
+          const right = document.createElement('div');
+          right.style.textAlign = 'right';
+          right.innerHTML = `<div style="font-weight:700">${formatTime(lap.time)}</div><div class="muted small">#${idx+1}</div>`;
+
+          // delete button for lap
+          const del = document.createElement('button');
+          del.className = 'btn';
+          del.style.minWidth='48px';
+          del.style.marginLeft='12px';
+          del.textContent='Del';
+          del.title = 'Delete lap';
+          del.addEventListener('click', () => {
+            laps = laps.filter(l => l.id !== lap.id);
+            renderLaps();
+          });
+
+          const leftWrap = document.createElement('div');
+          leftWrap.style.display='flex';
+          leftWrap.style.alignItems='center';
+          leftWrap.style.gap='12px';
+          leftWrap.appendChild(left);
+
+          const rightWrap = document.createElement('div');
+          rightWrap.style.display='flex';
+          rightWrap.style.alignItems='center';
+          rightWrap.appendChild(right);
+          rightWrap.appendChild(del);
+
+          row.appendChild(leftWrap);
+          row.appendChild(rightWrap);
+          lapsContainer.appendChild(row);
+        });
+      }
+
+      // initialize UI
+      renderLaps();
+      render();
+    })();
+  </script>
+</body>
+</html>

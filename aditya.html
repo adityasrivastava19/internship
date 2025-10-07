@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aditya Srivastava - Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    /* Global Styles */
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: 'Roboto', sans-serif;
+        background: linear-gradient(135deg, #fdfbfb, #ebedee); /* Soft pastel background */
+        color: #333;
+        scroll-behavior: smooth;
+    }
+
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    /* Header */
+    header {
+        text-align: center;
+        padding: 60px 20px 40px 20px;
+        background: linear-gradient(135deg, #ffecd2, #fcb69f); /* warm gradient */
+        border-radius: 0 0 50% 50% / 0 0 10% 10%;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    }
+
+    header h1 {
+        font-size: 3rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    header h2 {
+        font-weight: 400;
+        font-size: 1.5rem;
+        color: #555;
+    }
+
+    .profile-photo {
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        border: 5px solid #fff;
+        object-fit: cover;
+        margin: 30px auto;
+        display: block;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        transition: transform 0.4s;
+    }
+
+    .profile-photo:hover {
+        transform: scale(1.1) rotate(3deg);
+    }
+
+    /* Section Styling */
+    section {
+        max-width: 1000px;
+        margin: 50px auto;
+        padding: 40px 20px;
+        background: #fff; /* white background for contrast */
+        border-radius: 20px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        animation: fadeIn 1s ease;
+    }
+
+    section h3 {
+        text-align: center;
+        font-size: 2rem;
+        margin-bottom: 30px;
+        color: #333;
+    }
+
+    /* Skills Section */
+    .skills ul {
+        list-style: none;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .skills ul li {
+        background: linear-gradient(135deg, #84fab0, #8fd3f4); /* soft green-blue gradient */
+        margin: 10px;
+        padding: 12px 25px;
+        border-radius: 40px;
+        font-weight: bold;
+        color: #fff;
+        box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        transition: transform 0.3s, box-shadow 0.3s;
+        cursor: default;
+    }
+
+    .skills ul li:hover {
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+
+    /* About Me */
+    .about p {
+        line-height: 1.8;
+        font-size: 1.15rem;
+        margin-bottom: 20px;
+        color: #555;
+    }
+
+    .about ul {
+        list-style: disc inside;
+        margin-left: 20px;
+        color: #333;
+    }
+
+    .about ul li {
+        margin-bottom: 10px;
+    }
+
+    /* Footer */
+    footer {
+        text-align: center;
+        padding: 30px;
+        font-size: 0.9rem;
+        background: linear-gradient(135deg, #ffecd2, #fcb69f);
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        color: #333;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from {opacity: 0; transform: translateY(20px);}
+        to {opacity: 1; transform: translateY(0);}
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .skills ul {
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+    <h1>Aditya Srivastava</h1>
+    <h2>Software Engineer | Cybersecurity Enthusiast | Full-Stack Developer</h2>
+    <img src="adi.jpg" alt="Profile Photo" class="profile-photo">
+</header>
+
+<!-- Skills -->
+<section class="skills">
+    <h3>My Skills</h3>
+    <ul>
+        <li>Java</li>
+        <li>C</li>
+        <li>Python</li>
+        <li>JavaScript</li>
+        <li>HTML & CSS</li>
+        <li>React.js & Node.js</li>
+        <li>MySQL & MongoDB</li>
+        <li>Cybersecurity</li>
+        <li>Machine Learning</li>
+    </ul>
+</section>
+
+<!-- About Me -->
+<section class="about">
+    <h3>About Me</h3>
+    <p>
+        I am a passionate software engineer and cybersecurity enthusiast with hands-on experience in full-stack development, network security, and ethical hacking. 
+        With a strong foundation in programming, web development, and machine learning, I enjoy solving complex technical problems and creating secure, efficient software solutions.
+    </p>
+
+    <h4>Education:</h4>
+    <ul>
+        <li>B.Tech in Software Engineering, [Your University], [Year of Graduation]</li>
+        <li>Relevant Coursework: Network & System Security, Database Management, Machine Learning</li>
+    </ul>
+
+    <h4>Professional Experience:</h4>
+    <ul>
+        <li><strong>Software Development Intern</strong> – [Company Name]
+            <ul>
+                <li>Developed web applications using JavaScript, React, and Node.js.</li>
+                <li>Collaborated with a team to implement REST APIs and manage databases.</li>
+            </ul>
+        </li>
+        <li><strong>Cybersecurity Projects</strong> – Personal & Academic
+            <ul>
+                <li>Conducted penetration testing and vulnerability analysis on web and network systems.</li>
+                <li>Implemented secure coding practices and developed tools for security assessment.</li>
+            </ul>
+        </li>
+        <li><strong>Project Highlights</strong>
+            <ul>
+                <li>Brain Tumor Detection System – Built a machine learning model to detect brain tumors from MRI scans.</li>
+                <li>Transportation Management System – Developed a web application for GPS tracking, seat availability, and notifications.</li>
+                <li>Task Scheduler Project – Created a Java-based task scheduler optimizing user privacy.</li>
+            </ul>
+        </li>
+    </ul>
+</section>
+
+<!-- Footer -->
+<footer>
+    &copy; 2025 Aditya Srivastava. All rights reserved.
+</footer>
+
+</body>
+</html>

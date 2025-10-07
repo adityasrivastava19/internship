@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weather App</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    /* Global Styles */
+    body {
+        font-family: 'Roboto', sans-serif;
+        background: #e0f7fa;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        padding: 20px;
+    }
+
+    h1 {
+        margin-bottom: 20px;
+        color: #0077b6;
+    }
+
+    /* Input and Button */
+    .search {
+        margin-bottom: 30px;
+    }
+
+    .search input {
+        padding: 10px 15px;
+        border-radius: 8px;
+        border: 1px solid #0077b6;
+        width: 200px;
+        font-size: 1rem;
+    }
+
+    .search button {
+        padding: 10px 15px;
+        border-radius: 8px;
+        border: none;
+        background: #0077b6;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        margin-left: 10px;
+        transition: background 0.3s;
+    }
+
+    .search button:hover {
+        background: #0096c7;
+    }
+
+    /* Weather Info Container */
+    .weather-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    /* Blue Gradient Square */
+    .square {
+        width: 150px;
+        height: 150px;
+        background: linear-gradient(135deg, #00b4d8, #0077b6);
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 1.1rem;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        text-align: center;
+    }
+
+    /* Circle with Gradient */
+    .circle {
+        width: 150px;
+        height: 150px;
+        background: radial-gradient(circle, #00b4d8, #0096c7);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 1.1rem;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        text-align: center;
+    }
+</style>
+</head>
+<body>
+
+<h1>Weather App</h1>
+
+<div class="search">
+    <input type="text" id="locationInput" placeholder="Enter city or country">
+    <button onclick="getWeather()">Get Weather</button>
+</div>
+
+<div class="weather-container" id="weatherContainer">
+    <!-- Weather data will appear here -->
+</div>
+
+<script>
+    const apiKey = 'YOUR_OPENWEATHERMAP_API_KEY'; // Replace with your API key
+
+    async function getWeather() {
+        const location = document.getElementById('locationInput').value;
+        if (!location) return alert('Please enter a location');
+
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${apiKey}&units=metric`;
+
+        try {
+            const response = await fetch(url);
+            if(!response.ok) throw new Error('Location not found');
+
+            const data = await response.json();
+            displayWeather(data);
+        } catch (error) {
+            alert(error.message);
+        }
+    }
+
+    function displayWeather(data) {
+        const container = document.getElementById('weatherContainer');
+        container.innerHTML = '';
+
+        // Blue Square: Temperature
+        const tempSquare = document.createElement('div');
+        tempSquare.className = 'square';
+        tempSquare.innerHTML = `🌡 Temp<br>${data.main.temp} °C`;
+
+        // Circle: Weather Condition
+        const conditionCircle = document.createElement('div');
+        conditionCircle.className = 'circle';
+        conditionCircle.innerHTML = `☁ Condition<br>${data.weather[0].main}`;
+
+        // Blue Square: Humidity
+        const humiditySquare = document.createElement('div');
+        humiditySquare.className = 'square';
+        humiditySquare.innerHTML = `💧 Humidity<br>${data.main.humidity}%`;
+
+        // Circle: Wind Speed
+        const windCircle = document.createElement('div');
+        windCircle.className = 'circle';
+        windCircle.innerHTML = `🌬 Wind<br>${data.wind.speed} m/s`;
+
+        container.append(tempSquare, conditionCircle, humiditySquare, windCircle);
+    }
+
+    // Optional: Get weather based on user's current location
+    window.onload = () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(async (position) => {
+                const { latitude, longitude } = position.coords;
+                const url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`;
+                const response = await fetch(url);
+                const data = await response.json();
+                displayWeather(data);
+            });
+        }
+    }
+</script>
+
+</body>
+</html>
